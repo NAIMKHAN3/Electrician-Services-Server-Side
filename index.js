@@ -42,9 +42,17 @@ async function run() {
 
             try {
                 const id = req.params.id;
+                const serviceOne = await services.findOne({ _id: ObjectId(id) });
+                res.send({ status: true, data: serviceOne })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
+        app.get('/addreview/:id', async (req, res) => {
 
-
-
+            try {
+                const id = req.params.id;
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
                 res.send({ status: true, data: serviceOne })
             }
@@ -55,7 +63,6 @@ async function run() {
 
 
 
-        console.log(ser)
 
     }
     catch {
