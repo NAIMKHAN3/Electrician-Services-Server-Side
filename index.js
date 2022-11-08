@@ -74,7 +74,7 @@ async function run() {
             try {
                 const service = req.body;
                 const addService = await services.insertOne(service);
-                console.log(addService)
+
                 res.send({ status: true, data: addService })
             }
             catch {
@@ -85,8 +85,8 @@ async function run() {
 
             try {
                 const name = req.query.name;
-                const review = await reviews.find({ serviceName: name }).toArray();
 
+                const review = await reviews.find({ serviceName: name }).toArray();
                 res.send({ status: true, data: review })
             }
             catch {
