@@ -60,6 +60,16 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+        app.post('/addreview', async (req, res) => {
+            try {
+                const review = req.body;
+                const addReview = await reviews.insertOne(review);
+                res.send({ status: true, data: addReview })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
 
 
 
