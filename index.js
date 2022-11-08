@@ -70,6 +70,28 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+        app.get('/allreviews', async (req, res) => {
+
+            try {
+                const name = req.query.name;
+                const review = await reviews.find({ serviceName: name }).toArray();
+
+                res.send({ status: true, data: review })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
+        app.get('/myreviews', async (req, res) => {
+            try {
+                const email = req.query.email;
+                const review = await reviews.find({ userEmail: email }).toArray();
+                res.send({ status: true, data: review })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
 
 
 
