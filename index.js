@@ -70,6 +70,17 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+        app.post('/addservice', async (req, res) => {
+            try {
+                const service = req.body;
+                const addService = await services.insertOne(service);
+                console.log(addService)
+                res.send({ status: true, data: addService })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
         app.get('/allreviews', async (req, res) => {
 
             try {
