@@ -9,6 +9,10 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send({ success: true, message: 'server is running' })
+})
+
 async function verifyToken(req, res, next) {
     const authHeaders = req.headers?.authorization;
     if (!authHeaders) {
@@ -22,11 +26,7 @@ async function verifyToken(req, res, next) {
         req.decoded = decoded;
         next();
     })
-
 }
-
-
-
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ujhfrio.mongodb.net/?retryWrites=true&w=majority`;
@@ -35,20 +35,20 @@ async function run() {
     try {
         const services = client.db('assignment-11').collection('services');
         const reviews = client.db('assignment-11').collection('reviews');
-        app.get('/service', async (req, res) => {
 
+
+        app.get('/service', async (req, res) => {
             try {
                 const service = await services.find({}).limit(3).toArray();
-
-
                 res.send({ status: true, data: service })
             }
             catch {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/services', async (req, res) => {
 
+
+        app.get('/services', async (req, res) => {
             try {
                 const service = await (await services.find({}).toArray()).reverse();
                 res.send({ status: true, data: service })
@@ -57,11 +57,11 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/services/:id', async (req, res) => {
 
+
+        app.get('/services/:id', async (req, res) => {
             try {
                 const id = req.params.id;
-
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
                 res.send({ status: true, data: serviceOne })
             }
@@ -69,8 +69,9 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/addreview/:id', async (req, res) => {
 
+
+        app.get('/addreview/:id', async (req, res) => {
             try {
                 const id = req.params.id;
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
@@ -102,18 +103,17 @@ async function run() {
             try {
                 const service = req.body;
                 const addService = await services.insertOne(service);
-
                 res.send({ status: true, data: addService })
             }
             catch {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/allreviews', async (req, res) => {
 
+
+        app.get('/allreviews', async (req, res) => {
             try {
                 const name = req.query.name;
-
                 const review = await (await reviews.find({ serviceName: name }).toArray()).reverse();
                 res.send({ status: true, data: review })
             }
@@ -121,16 +121,15 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/myreviews', verifyToken, async (req, res) => {
 
+
+        app.get('/myreviews', verifyToken, async (req, res) => {
             try {
                 const email = req.query.email;
                 const decoded = req.decoded;
-
                 if (decoded.email !== email) {
                     return res.status(403).send({ status: false, message: 'unathoraized' })
                 }
-
                 const review = await (await reviews.find({ userEmail: email }).toArray()).reverse();
                 res.send({ status: true, data: review })
             }
@@ -150,20 +149,18 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+
         app.patch('/editreview', async (req, res) => {
             const id = req.query.id;
             const review = req.body;
             try {
                 const edit = await reviews.updateOne({ _id: ObjectId(id) }, { $set: review });
-
                 res.send({ status: true, data: edit })
             }
             catch {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-
-
 
 
         app.delete('/deletereview/:id', async (req, res) => {
@@ -176,18 +173,11 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-
-
-
-
     }
     catch {
-
-
     }
 }
 run().catch(e => console.log(e))
-
 
 app.listen(port, () => {
     console.log('server is running', port)
