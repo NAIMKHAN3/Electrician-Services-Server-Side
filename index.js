@@ -1,12 +1,29 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+async function verifyToken(req, res, next) {
+    const authHeaders = req.headers?.authorization;
+    if (!authHeaders) {
+        return res.status(401).send({ success: false, message: 'unauthorized' })
+    }
+    const token = authHeaders.split(' ')[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+        if (err) {
+            return res.status(401).send({ success: false, message: 'unauthorized' })
+        }
+        req.decoded = decoded;
+        next();
+    })
+
+}
 
 
 
@@ -63,6 +80,14 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+
+        app.post('/jwt', (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN);
+            res.send({ token })
+        })
+
+
         app.post('/addreview', async (req, res) => {
             try {
                 const review = req.body;
@@ -96,9 +121,16 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
-        app.get('/myreviews', async (req, res) => {
+        app.get('/myreviews', verifyToken, async (req, res) => {
+
             try {
                 const email = req.query.email;
+                const decoded = req.decoded;
+
+                if (decoded.email !== email) {
+                    return res.status(403).send({ status: false, message: 'unathoraized' })
+                }
+
                 const review = await (await reviews.find({ userEmail: email }).toArray()).reverse();
                 res.send({ status: true, data: review })
             }
@@ -123,7 +155,7 @@ async function run() {
             const review = req.body;
             try {
                 const edit = await reviews.updateOne({ _id: ObjectId(id) }, { $set: review });
-                console.log(edit)
+
                 res.send({ status: true, data: edit })
             }
             catch {
