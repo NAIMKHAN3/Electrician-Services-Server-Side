@@ -22,6 +22,8 @@ async function run() {
 
             try {
                 const service = await services.find({}).limit(3).toArray();
+                console.log(service)
+
                 res.send({ status: true, data: service })
             }
             catch {
@@ -31,7 +33,7 @@ async function run() {
         app.get('/services', async (req, res) => {
 
             try {
-                const service = await services.find({}).toArray();
+                const service = await (await services.find({}).toArray()).reverse();
                 res.send({ status: true, data: service })
             }
             catch {
@@ -86,7 +88,7 @@ async function run() {
             try {
                 const name = req.query.name;
 
-                const review = await reviews.find({ serviceName: name }).toArray();
+                const review = await (await reviews.find({ serviceName: name }).toArray()).reverse();
                 res.send({ status: true, data: review })
             }
             catch {
@@ -96,8 +98,18 @@ async function run() {
         app.get('/myreviews', async (req, res) => {
             try {
                 const email = req.query.email;
-                const review = await reviews.find({ userEmail: email }).toArray();
+                const review = await (await reviews.find({ userEmail: email }).toArray()).reverse();
                 res.send({ status: true, data: review })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
+        app.delete('/deletereview/:id', async (req, res) => {
+            try {
+                const id = req.params.id;
+                const deleteReview = await reviews.deleteOne({ _id: ObjectId(id) });
+                res.send({ status: true, data: deleteReview })
             }
             catch {
                 res.send({ status: false, error: 'couldnt data' })
