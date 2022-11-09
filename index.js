@@ -22,7 +22,7 @@ async function run() {
 
             try {
                 const service = await services.find({}).limit(3).toArray();
-                console.log(service)
+
 
                 res.send({ status: true, data: service })
             }
@@ -44,6 +44,7 @@ async function run() {
 
             try {
                 const id = req.params.id;
+
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
                 res.send({ status: true, data: serviceOne })
             }
@@ -105,6 +106,34 @@ async function run() {
                 res.send({ status: false, error: 'couldnt data' })
             }
         })
+
+
+        app.get('/editreview/:id', async (req, res) => {
+            try {
+                const id = req.params.id;
+                const edit = await reviews.findOne({ _id: ObjectId(id) });
+                res.send({ status: true, data: edit })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
+        app.patch('/editreview', async (req, res) => {
+            const id = req.query.id;
+            const review = req.body;
+            try {
+                const edit = await reviews.updateOne({ _id: ObjectId(id) }, { $set: review });
+                console.log(edit)
+                res.send({ status: true, data: edit })
+            }
+            catch {
+                res.send({ status: false, error: 'couldnt data' })
+            }
+        })
+
+
+
+
         app.delete('/deletereview/:id', async (req, res) => {
             try {
                 const id = req.params.id;
