@@ -40,10 +40,10 @@ async function run() {
         app.get('/service', async (req, res) => {
             try {
                 const service = await services.find({}).limit(3).toArray();
-                res.send({ status: true, data: service })
+                res.send({ status: true, data: service });
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -51,10 +51,10 @@ async function run() {
         app.get('/services', async (req, res) => {
             try {
                 const service = await (await services.find({}).toArray()).reverse();
-                res.send({ status: true, data: service })
+                res.send({ status: true, data: service });
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -63,10 +63,10 @@ async function run() {
             try {
                 const id = req.params.id;
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
-                res.send({ status: true, data: serviceOne })
+                res.send({ status: true, data: serviceOne });
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -75,7 +75,7 @@ async function run() {
             try {
                 const id = req.params.id;
                 const serviceOne = await services.findOne({ _id: ObjectId(id) });
-                res.send({ status: true, data: serviceOne })
+                res.send({ status: true, data: serviceOne });
             }
             catch {
                 res.send({ status: false, error: 'couldnt data' })
@@ -85,7 +85,7 @@ async function run() {
         app.post('/jwt', (req, res) => {
             const user = req.body;
             const token = jwt.sign(user, process.env.ACCESS_TOKEN);
-            res.send({ token })
+            res.send({ token });
         })
 
 
@@ -93,10 +93,10 @@ async function run() {
             try {
                 const review = req.body;
                 const addReview = await reviews.insertOne(review);
-                res.send({ status: true, data: addReview })
+                res.send({ status: true, data: addReview });
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
         app.post('/addservice', async (req, res) => {
@@ -106,7 +106,7 @@ async function run() {
                 res.send({ status: true, data: addService })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -118,7 +118,7 @@ async function run() {
                 res.send({ status: true, data: review })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -134,7 +134,7 @@ async function run() {
                 res.send({ status: true, data: review })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -146,7 +146,7 @@ async function run() {
                 res.send({ status: true, data: edit })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -158,7 +158,7 @@ async function run() {
                 res.send({ status: true, data: edit })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
 
@@ -170,7 +170,7 @@ async function run() {
                 res.send({ status: true, data: deleteReview })
             }
             catch {
-                res.send({ status: false, error: 'couldnt data' })
+                res.send({ status: false, error: 'couldnt data' });
             }
         })
     }
@@ -180,5 +180,5 @@ async function run() {
 run().catch(e => console.log(e))
 
 app.listen(port, () => {
-    console.log('server is running', port)
+    console.log('server is running', port);
 })
